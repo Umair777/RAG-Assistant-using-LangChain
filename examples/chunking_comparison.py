@@ -9,7 +9,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from rag_assistant.chunking import DocumentChunker, ChunkingStrategy
-from langchain.schema import Document
+from langchain_core.documents import Document
 
 
 def demonstrate_chunking_strategies():
@@ -48,8 +48,11 @@ def demonstrate_chunking_strategies():
     strategies = [
         (ChunkingStrategy.RECURSIVE, "Recursive Character Splitting"),
         (ChunkingStrategy.FIXED_SIZE, "Fixed-Size Character Splitting"),
-        (ChunkingStrategy.TOKEN_BASED, "Token-Based Splitting")
     ]
+    
+    # Note: Token-based splitting requires internet access to download tokenizer
+    # Uncomment the line below if you have internet access:
+    # strategies.append((ChunkingStrategy.TOKEN_BASED, "Token-Based Splitting"))
     
     chunk_sizes = [200, 300, 500]
     

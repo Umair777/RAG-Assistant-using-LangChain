@@ -5,9 +5,10 @@ Implements the RAG pipeline for question answering
 
 from typing import List, Optional, Dict, Any
 from langchain_openai import ChatOpenAI
-from langchain.chains import RetrievalQA
-from langchain.prompts import PromptTemplate
-from langchain.schema import Document
+from langchain_core.prompts import PromptTemplate
+from langchain_core.documents import Document
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.output_parsers import StrOutputParser
 from .vector_store import VectorStoreManager
 
 
@@ -63,33 +64,34 @@ Answer:"""
             input_variables=["context", "question"]
         )
         
-        # Initialize QA chain
-        self.qa_chain = None
+        # Initialize chain
+        self.chain = None
+        self._retriever = None
+    
+    def _format_docs(self, docs):
+        """Format retrieved documents for prompt"""
+        return "\n\n".join(doc.page_content for doc in docs)
     
     def create_qa_chain(
         self,
-        chain_type: str = "stuff",
-        k: int = 4,
-        return_source_documents: bool = True
+        k: int = 4
     ):
         """
-        Create a QA chain with the vector store
+        Create a QA chain with the vector store using LCEL
         
         Args:
-            chain_type: Type of chain ('stuff', 'map_reduce', 'refine', 'map_rerank')
             k: Number of documents to retrieve
-            return_source_documents: Whether to return source documents
         """
-        retriever = self.vector_store_manager.as_retriever(
+        self._retriever = self.vector_store_manager.as_retriever(
             search_kwargs={"k": k}
         )
         
-        self.qa_chain = RetrievalQA.from_chain_type(
-            llm=self.llm,
-            chain_type=chain_type,
-            retriever=retriever,
-            return_source_documents=return_source_documents,
-            chain_type_kwargs={"prompt": self.prompt}
+        # Create chain using LCEL
+        self.chain = (
+            {"context": self._retriever | self._format_docs, "question": RunnablePassthrough()}
+            | self.prompt
+            | self.llm
+            | StrOutputParser()
         )
     
     def query(
@@ -107,15 +109,19 @@ Answer:"""
         Returns:
             Dictionary with answer and source documents
         """
-        if self.qa_chain is None:
+        if self.chain is None or self._retriever is None:
             self.create_qa_chain(k=k)
         
-        result = self.qa_chain({"query": question})
+        # Get answer from chain
+        answer = self.chain.invoke(question)
+        
+        # Get source documents separately
+        source_docs = self._retriever.invoke(question)
         
         return {
             'question': question,
-            'answer': result['result'],
-            'source_documents': result.get('source_documents', [])
+            'answer': answer,
+            'source_documents': source_docs
         }
     
     def query_with_retrieval_details(
@@ -195,8 +201,8 @@ Answer:"""
             template=template,
             input_variables=input_variables
         )
-        # Recreate QA chain with new prompt
-        self.qa_chain = None
+        # Recreate chain with new prompt
+        self.chain = None
     
     def update_inference_params(
         self,
@@ -222,8 +228,8 @@ Answer:"""
             max_tokens=self.max_tokens
         )
         
-        # Reset QA chain to use new LLM
-        self.qa_chain = None
+        # Reset chain to use new LLM
+        self.chain = None
     
     def get_inference_info(self) -> dict:
         """
@@ -236,5 +242,5 @@ Answer:"""
             'llm_model': self.llm_model,
             'temperature': self.temperature,
             'max_tokens': self.max_tokens,
-            'chain_initialized': self.qa_chain is not None
+            'chain_initialized': self.chain is not None
         }

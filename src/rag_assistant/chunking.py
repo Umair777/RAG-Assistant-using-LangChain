@@ -4,12 +4,12 @@ Implements various text chunking strategies for document processing
 """
 
 from typing import List, Optional
-from langchain.text_splitter import (
+from langchain_text_splitters import (
     RecursiveCharacterTextSplitter,
     CharacterTextSplitter,
     TokenTextSplitter
 )
-from langchain.schema import Document
+from langchain_core.documents import Document
 from enum import Enum
 
 
