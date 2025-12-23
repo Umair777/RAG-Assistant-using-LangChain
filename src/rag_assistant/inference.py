@@ -49,6 +49,7 @@ Answer:"""
         self.llm_model = llm_model
         self.temperature = temperature
         self.max_tokens = max_tokens
+        self.openai_api_key = openai_api_key  # Store for later use
         
         # Initialize LLM
         self.llm = ChatOpenAI(
@@ -226,7 +227,7 @@ Answer:"""
             model=self.llm_model,
             temperature=self.temperature,
             max_tokens=self.max_tokens,
-            openai_api_key=self.llm._client.api_key if hasattr(self.llm, '_client') else None
+            openai_api_key=self.openai_api_key
         )
         
         # Reset chain to use new LLM

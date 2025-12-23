@@ -129,7 +129,6 @@ def test_config():
     
     # Set a test API key to avoid validation error
     # Use os.environ temporarily for testing
-    import os
     old_key = os.environ.get('OPENAI_API_KEY')
     try:
         os.environ['OPENAI_API_KEY'] = 'test-key-for-validation'

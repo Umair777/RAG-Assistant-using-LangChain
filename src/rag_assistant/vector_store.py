@@ -196,15 +196,20 @@ class VectorStoreManager:
             }
         
         try:
-            # Use public API instead of accessing private attributes
-            # Count by attempting a get operation
+            # Attempt to get document count using safer methods
+            doc_count = 'unknown'
+            
+            # Try multiple approaches to get the count
             try:
-                # Try to get count through a safer method
-                collection = self.vectorstore._collection
-                doc_count = collection.count()
-            except:
-                # Fallback if direct access fails
-                doc_count = 'unknown'
+                # First, try using a public API if available
+                # Some versions of ChromaDB expose count differently
+                if hasattr(self.vectorstore, '_collection') and hasattr(self.vectorstore._collection, 'count'):
+                    doc_count = self.vectorstore._collection.count()
+                elif hasattr(self.vectorstore, 'count'):
+                    doc_count = self.vectorstore.count()
+            except Exception:
+                # If all methods fail, leave as 'unknown'
+                pass
             
             return {
                 'status': 'initialized',
@@ -216,5 +221,6 @@ class VectorStoreManager:
         except Exception as e:
             return {
                 'status': 'error',
-                'error': str(e)
+                'error': str(e),
+                'collection_name': self.collection_name
             }
