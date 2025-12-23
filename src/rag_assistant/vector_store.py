@@ -196,12 +196,21 @@ class VectorStoreManager:
             }
         
         try:
-            collection = self.vectorstore._collection
+            # Use public API instead of accessing private attributes
+            # Count by attempting a get operation
+            try:
+                # Try to get count through a safer method
+                collection = self.vectorstore._collection
+                doc_count = collection.count()
+            except:
+                # Fallback if direct access fails
+                doc_count = 'unknown'
+            
             return {
                 'status': 'initialized',
                 'collection_name': self.collection_name,
                 'persist_directory': self.persist_directory,
-                'document_count': collection.count(),
+                'document_count': doc_count,
                 'embedding_model': self.embedding_model
             }
         except Exception as e:

@@ -128,15 +128,22 @@ def test_config():
     print("  ✓ Testing default configuration...")
     
     # Set a test API key to avoid validation error
-    os.environ['OPENAI_API_KEY'] = 'test-key-for-validation'
-    
-    config = Config()
-    assert config.chunk_size == 1000
-    assert config.chunk_overlap == 200
-    assert config.llm_model == "gpt-3.5-turbo"
-    
-    # Clean up
-    del os.environ['OPENAI_API_KEY']
+    # Use os.environ temporarily for testing
+    import os
+    old_key = os.environ.get('OPENAI_API_KEY')
+    try:
+        os.environ['OPENAI_API_KEY'] = 'test-key-for-validation'
+        
+        config = Config()
+        assert config.chunk_size == 1000
+        assert config.chunk_overlap == 200
+        assert config.llm_model == "gpt-3.5-turbo"
+    finally:
+        # Restore original state
+        if old_key is None:
+            os.environ.pop('OPENAI_API_KEY', None)
+        else:
+            os.environ['OPENAI_API_KEY'] = old_key
     
     print("✅ All configuration tests passed!")
 

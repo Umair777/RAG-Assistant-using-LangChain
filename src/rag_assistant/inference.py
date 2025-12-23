@@ -52,7 +52,7 @@ Answer:"""
         
         # Initialize LLM
         self.llm = ChatOpenAI(
-            model_name=llm_model,
+            model=llm_model,
             temperature=temperature,
             max_tokens=max_tokens,
             openai_api_key=openai_api_key
@@ -223,9 +223,10 @@ Answer:"""
         
         # Recreate LLM with new parameters
         self.llm = ChatOpenAI(
-            model_name=self.llm_model,
+            model=self.llm_model,
             temperature=self.temperature,
-            max_tokens=self.max_tokens
+            max_tokens=self.max_tokens,
+            openai_api_key=self.llm._client.api_key if hasattr(self.llm, '_client') else None
         )
         
         # Reset chain to use new LLM
