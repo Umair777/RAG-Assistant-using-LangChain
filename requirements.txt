@@ -1,0 +1,10 @@
+torch
+transformers
+langchain
+langchain-community
+sentence-transformers
+faiss-cpu
+gradio
+accelerate
+bitsandbytes
+
