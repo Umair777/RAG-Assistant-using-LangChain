@@ -1,4 +1,5 @@
 langchain-community==0.2.1
+pypdf==4.2.0
 # torch
 # transformers
 # langchain
