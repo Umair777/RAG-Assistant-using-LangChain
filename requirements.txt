@@ -4,6 +4,7 @@ PyMuPDF==1.24.5
 unstructured==0.14.8
 markdown==3.6
 nltk==3.8.0
+jq==1.7.0
 # torch
 # transformers
 # langchain
