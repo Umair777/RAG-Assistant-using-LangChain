@@ -6,6 +6,7 @@ markdown==3.6
 nltk==3.8.0
 jq==1.7.0
 pandas==2.2.2
+docx2txt==0.8
 # torch
 # transformers
 # langchain
