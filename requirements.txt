@@ -5,6 +5,7 @@ unstructured==0.14.8
 markdown==3.6
 nltk==3.8.0
 jq==1.7.0
+pandas==2.2.2
 # torch
 # transformers
 # langchain
