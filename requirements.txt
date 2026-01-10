@@ -5,8 +5,11 @@ unstructured==0.14.8
 markdown==3.6
 nltk==3.8.0
 jq==1.7.0
-pandas==2.2.2
+pandas==2.1.4
 docx2txt==0.8
+ibm-watsonx-ai==1.1.2
+langchain-ibm==0.1.11
+sentence-transformers==3.0.1
 # torch
 # transformers
 # langchain

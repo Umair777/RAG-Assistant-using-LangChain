@@ -6,7 +6,7 @@ def load_text(pth: str):
     return docs
 
 if __name__ == "__main__":
-    documents = load_text("data/new-Policies.txt")
+    documents = load_text("../../data/new-Policies.txt")
     print(f"Loaded {len(documents)} documents.")
     print(documents[0].page_content[:500])
     
