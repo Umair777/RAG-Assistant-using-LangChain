@@ -1,17 +1,22 @@
 from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_core.documents import Document
 import load_data
 import split_data
 
-
-if __name__ == "__main__":
+def embed_and_store():
     model_name = "sentence-transformers/all-mpnet-base-v2"
-    huggingface_embedding = HuggingFaceEmbeddings(model_name=model_name)
-    # query = "How are you?"
-    data = load_data.load_text_file("new-Policies.txt")
-    print(f"Loaded {len(data)} documents.")
-    print(data[0].page_content[:500])
-    split_texts = split_data.split_data(data[0].page_content)
-    print(f"Split into {len(split_texts)} chunks.")
-    print(split_texts[0])
-    query_result = huggingface_embedding.embed_query(split_texts[0])
-    print(f"Embedding result: {query_result}")
+    embedding_function = HuggingFaceEmbeddings(model_name=model_name)
+
+    documents = load_data.load_text_file("new-Policies.txt")
+    text = documents[0].page_content
+
+    split_texts = split_data.split_data(text)
+
+    docs = [
+        Document(page_content=chunk, metadata={"chunk_id": i})
+        for i, chunk in enumerate(split_texts)
+    ]
+
+    ids = [str(i) for i in range(len(docs))]
+
+    return docs, embedding_function, ids
