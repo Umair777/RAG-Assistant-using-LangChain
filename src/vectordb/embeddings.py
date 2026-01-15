@@ -18,5 +18,8 @@ def embed_and_store():
     ]
 
     ids = [str(i) for i in range(len(docs))]
+    print(f"Total chunk ids created: {len(ids)}")
 
     return docs, embedding_function, ids
+
+

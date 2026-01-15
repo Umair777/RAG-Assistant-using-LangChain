@@ -1,7 +1,7 @@
 from langchain_community.vectorstores import Chroma
 import embeddings
 
-def create_vector_store():
+def chromadb_vector_store():
     docs, embedding_function, ids = embeddings.embed_and_store()
 
     vector_store = Chroma.from_documents(
