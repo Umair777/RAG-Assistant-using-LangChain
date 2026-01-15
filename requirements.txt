@@ -10,6 +10,7 @@ docx2txt==0.8
 ibm-watsonx-ai==1.1.2
 langchain-ibm==0.1.11
 sentence-transformers==3.0.1
+chromadb==0.4.24
 # torch
 # transformers
 # langchain
