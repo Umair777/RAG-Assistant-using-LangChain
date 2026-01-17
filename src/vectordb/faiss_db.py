@@ -9,6 +9,7 @@ def faiss_vector_store():
         ids=ids,
        
         )
+    # vector_store.add
     print("FAISS Vector store created successfully.")
     print(f"Total documents in FAISS store: {vector_store.index.ntotal}")
     print("Total document IDs in FAISS store:", len(list(vector_store.docstore._dict.keys())))
