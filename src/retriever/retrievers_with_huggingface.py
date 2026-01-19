@@ -72,4 +72,34 @@ if __name__ == "__main__":
     for doc in docs:
         print(doc.page_content)
         
+    ## mmr retriever
+    mmr_retriever = vectordb.as_retriever(search_type="mmr")
+    mmr_docs = mmr_retriever.invoke(query)
     
+    print(f"\n========= MMR Documents retrieved for query '{query}': {len(mmr_docs)}\n")
+    for doc in mmr_docs:
+        print(doc.page_content)
+        
+    
+'''
+# Output:
+# Total documents loaded: 1
+Failed to send telemetry event ClientStartEvent: capture() takes 1 positional argument but 3 were given
+Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+Failed to send telemetry event CollectionQueryEvent: capture() takes 1 positional argument but 3 were given
+
+========= Documents retrieved for query 'email policy': 4
+
+3.      Internet and Email Policy
+Our Internet and Email Policy aims to promote safe, responsible usage of digital communication tools that align with our values and legal obligations. Each employee is expected to understand and
+Our Internet and Email Policy is established to guide the responsible and secure use of these essential tools within our organization. We recognize their significance in daily business operations and
+Confidentiality: Reserve email for the transmission of confidential information, trade secrets, and sensitive customer data only when encryption is applied. Exercise discretion when discussing
+
+========= MMR Documents retrieved for query 'email policy': 4
+
+3.      Internet and Email Policy
+Confidentiality: Reserve email for the transmission of confidential information, trade secrets, and sensitive customer data only when encryption is applied. Exercise discretion when discussing
+Review of Policy: This policy will be reviewed periodically to ensure its alignment with evolving legal requirements and best practices for maintaining a healthy and safe workplace.
+individual found to be in violation of this policy.
+
+'''
