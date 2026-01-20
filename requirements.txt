@@ -1,4 +1,8 @@
+langchain==0.2.1
 langchain-community==0.2.1
+langchain-huggingface>=0.0.3
+neo4j>=5.0
+lark==1.1.9
 pypdf==4.2.0
 PyMuPDF==1.24.5
 unstructured==0.14.8
@@ -11,6 +15,9 @@ ibm-watsonx-ai==1.1.2
 langchain-ibm==0.1.11
 sentence-transformers==3.0.1
 chromadb==0.4.24
+gradio==4.44.0
+pydantic==2.10.6
+huggingface_hub==0.23.0 
 # torch
 # transformers
 # langchain
