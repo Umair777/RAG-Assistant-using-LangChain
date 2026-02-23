@@ -17,7 +17,14 @@ sentence-transformers==3.0.1
 chromadb==0.4.24
 gradio==4.44.0
 pydantic==2.10.6
-huggingface_hub==0.23.0 
+huggingface_hub==0.23.0
+xlrd
+openpyxl 
+pyodide.http
+requests
+aiohttp
+nba_api 
+IPython
 # torch
 # transformers
 # langchain

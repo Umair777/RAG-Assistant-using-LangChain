@@ -1,15 +1,106 @@
-# RAG-Assistant-using-LangChain
-This is an AI agent in building, keeping the focusing to provide real-time policy driven interraction for HR firms.
+---
+title: GenAI RAG Assistant
+emoji: 🧠
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+---
 
-# STEP 1
-Setup the project with docker images utilzing ubuntu via GPU accelerated environments such CUDA for Nvidia GPU.
 
-# STEP 2
-Add the documents and create the data pipelines using langChain and huggingFace
+# RAG Assistant Using LangChain
 
-## Objectives
+[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-HuggingFace%20Spaces-yellow?logo=huggingface&logoColor=black)](YOUR_SPACE_URL)
 
-- Build a step-wise, reproducible document ingestion pipeline
-- Understand and validate each LangChain document loader independently
-- Maintain parity between local development (venv) and Docker runtime
-- Prepare a solid foundation for a production-grade RAG system
+A modular, production-aligned Retrieval-Augmented Generation (RAG) system built with LangChain and deployed via Docker.
+
+
+This Space demonstrates a production-aligned AI pipeline combining document ingestion, embeddings, vector retrieval, and contextual response generation.
+
+---
+
+## Overview
+
+This application showcases:
+
+- Document ingestion pipeline
+- Embedding generation
+- Vector database retrieval
+- Context-aware response synthesis
+- Docker-based deployment architecture
+
+The system is designed to reflect real-world RAG architecture used in enterprise AI systems.
+
+---
+
+## System Flow
+
+User Query
+↓
+Retriever
+↓
+Vector Database
+↓
+Context Construction
+↓
+LLM Response
+
+
+---
+
+## Technical Stack
+
+- Python
+- LangChain
+- Hugging Face ecosystem
+- Docker containerization
+- CPU-optimized deployment
+
+---
+
+## Deployment Configuration
+
+This Space runs using:
+
+- Docker SDK
+- CPU Basic hardware
+- Port 7860
+- Stateless container architecture
+
+The Dockerfile is optimized for lightweight cloud execution using:
+
+
+---
+
+## Intended Use
+
+This project serves as:
+
+- A research demonstration of RAG architecture
+- A portfolio-grade AI system
+- A foundation for scalable enterprise knowledge assistants
+- A prototype for policy-driven conversational AI
+
+---
+
+## Notes
+
+- No large model weights are stored in this repository.
+- API keys (if used) are configured via Space Secrets.
+- The system is designed for reproducibility and modular experimentation.
+
+---
+
+## Author
+
+Umair Ashraf  
+AI Systems & Interactive Intelligence Research  
+
+---
+
+## License
+
+MIT License
