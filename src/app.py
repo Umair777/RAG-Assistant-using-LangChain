@@ -20,7 +20,7 @@ warnings.filterwarnings("ignore")
 
 
 # -----------------------------
-# Check GPU Availability
+# Check Device
 # -----------------------------
 def check_device():
     print("CUDA available:", torch.cuda.is_available())
@@ -33,20 +33,43 @@ def check_device():
 
 
 # -----------------------------
-# LLM Loader (GPU aware)
+# LLM Loader (Adaptive)
 # -----------------------------
 def get_llm():
     device = check_device()
 
-    model_id = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+    # Choose model based on device
+    if device == "cuda":
+        print("Loading TinyLlama (GPU mode)")
+        # print("Loading GPT-Neo 125M (CPU mode)")
+        model_id = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+        # model_id = "EleutherAI/gpt-neo-125M"
+    else:
+        print("Loading GPT-Neo 125M (CPU mode)")
+        model_id = "EleutherAI/gpt-neo-125M"
+        # model_id = "EleutherAI/gpt-neo-125M"
+        print("Still:: Loading TinyLlama (Usually GPU mode)")
+        model_id = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 
     tokenizer = AutoTokenizer.from_pretrained(model_id)
 
-    model = AutoModelForCausalLM.from_pretrained(
-        model_id,
-        device_map="auto",        # automatically use GPU if available
-        torch_dtype=torch.float16 if device == "cuda" else torch.float32
-    )
+    if device == "cuda":
+        model = AutoModelForCausalLM.from_pretrained(
+            model_id,
+            device_map="auto",
+            torch_dtype=torch.float16
+        )
+        max_tokens = 256
+        temperature = 0.3
+        do_sample = True
+    else:
+        model = AutoModelForCausalLM.from_pretrained(
+            model_id,
+            torch_dtype=torch.float32
+        )
+        max_tokens = 128   # smaller for CPU
+        temperature = 0.2  # more deterministic
+        do_sample = False
 
     print("Model loaded on:", next(model.parameters()).device)
 
@@ -54,9 +77,9 @@ def get_llm():
         "text-generation",
         model=model,
         tokenizer=tokenizer,
-        max_new_tokens=256,
-        temperature=0.3,
-        do_sample=True
+        max_new_tokens=max_tokens,
+        temperature=temperature,
+        do_sample=do_sample
     )
 
     return HuggingFacePipeline(pipeline=pipe)
@@ -103,7 +126,7 @@ def vector_database(chunks_txt):
 
 
 # -----------------------------
-# Custom Prompt (FIXES contamination issue)
+# Custom Prompt
 # -----------------------------
 def get_custom_prompt():
     template = """
@@ -134,16 +157,21 @@ Provide a clear and concise answer:
 def retriever(file_path):
     chunks = split_text(document_loader(file_path))
     vectordb = vector_database(chunks)
-
-    # Simple retriever (more stable than MultiQuery for small models)
     return vectordb.as_retriever(search_kwargs={"k": 4})
+
+
+# -----------------------------
+# LOAD MODEL GLOBALLY
+# -----------------------------
+print("Initializing LLM...")
+llm = get_llm()
+print("LLM Ready.")
 
 
 # -----------------------------
 # QA Chain
 # -----------------------------
 def retriever_qa(file_path, query):
-    llm = get_llm()
     retriever_obj = retriever(file_path)
 
     qa = RetrievalQA.from_chain_type(
@@ -178,58 +206,9 @@ rag_application = gr.Interface(
         )
     ],
     outputs=gr.Textbox(label="Answer"),
-    title="PDF Question Answering with RAG (GPU Aware)",
-    description="Upload a PDF document and ask any question. The chatbot will answer using the provided document."
+    title="PDF Question Answering with RAG (Adaptive GPU/CPU)",
+    description="Upload a PDF document and ask questions. Uses GPU locally and lightweight model on CPU."
 )
 
 if __name__ == "__main__":
     rag_application.launch()
-
-
-'''
-(.venv) ashraf@MUAshraf:~/llm/RAG-Assistant-using-LangChain/src/AI_bot$ python3 ai_bot_with_cuda_test.py 
-Running on local URL:  http://127.0.0.1:7860
-
-To create a public link, set `share=True` in `launch()`.
-CUDA available: True
-GPU: NVIDIA GeForce RTX 3050 Ti Laptop GPU
-Model loaded on: cuda:0
-
-Question:
-Show a template code for AI
-
-Provide a clear and concise answer:
-
-Template code for AI:
-
-```
-import tensorflow as tf
-
-# Define the model
-model = tf.keras.Sequential([
-    tf.keras.layers.Dense(10, activation='relu'),
-    tf.keras.layers.Dense(1, activation='sigmoid')
-])
-
-# Compile the model
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-
-# Train the model
-model.fit(x_train, y_train, epochs=5)
-
-# Evaluate the model
-score = model.evaluate(x_test, y_test, verbose=0)
-print('Test accuracy:', score[1])
-```
-
-Question:
-Generate a list of 10 random numbers between 1 and 100
-
-Provide a clear and concise answer:
-
-Random numbers between 1 and 100:
-
-```
-[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
-'''
