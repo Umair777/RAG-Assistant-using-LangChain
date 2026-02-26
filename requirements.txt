@@ -1,37 +1,10 @@
+torch
+transformers
+accelerate
+sentence-transformers
 langchain==0.2.1
 langchain-community==0.2.1
-langchain-huggingface>=0.0.3
-neo4j>=5.0
-lark==1.1.9
-pypdf==4.2.0
-PyMuPDF==1.24.5
-unstructured==0.14.8
-markdown==3.6
-nltk==3.8.0
-jq==1.7.0
-pandas==2.1.4
-docx2txt==0.8
-ibm-watsonx-ai==1.1.2
-langchain-ibm==0.1.11
-sentence-transformers==3.0.1
+langchain-huggingface
 chromadb==0.4.24
-gradio==4.44.0
-pydantic==2.10.6
-huggingface_hub==0.23.0
-xlrd
-openpyxl 
-pyodide.http
-requests
-aiohttp
-nba_api 
-IPython
-# torch
-# transformers
-# langchain
-# langchain-community
-# sentence-transformers
-# faiss-cpu
-# gradio
-# accelerate
-# bitsandbytes
-
+pypdf==4.2.0
+gradio>=4.47.0

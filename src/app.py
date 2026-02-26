@@ -45,8 +45,8 @@ def get_llm():
         model_id = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
         # model_id = "EleutherAI/gpt-neo-125M"
     else:
-        print("Loading GPT-Neo 125M (CPU mode)")
-        model_id = "EleutherAI/gpt-neo-125M"
+        # print("Loading GPT-Neo 125M (CPU mode)")
+        # model_id = "EleutherAI/gpt-neo-125M"
         # model_id = "EleutherAI/gpt-neo-125M"
         print("Still:: Loading TinyLlama (Usually GPU mode)")
         model_id = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
@@ -164,7 +164,7 @@ def retriever(file_path):
 # LOAD MODEL GLOBALLY
 # -----------------------------
 print("Initializing LLM...")
-llm = get_llm()
+llm = None
 print("LLM Ready.")
 
 
@@ -172,6 +172,13 @@ print("LLM Ready.")
 # QA Chain
 # -----------------------------
 def retriever_qa(file_path, query):
+    global llm
+
+    if llm is None:
+        print("Loading LLM now...")
+        llm = get_llm()
+        print("LLM Ready.")
+
     retriever_obj = retriever(file_path)
 
     qa = RetrievalQA.from_chain_type(
@@ -185,13 +192,12 @@ def retriever_qa(file_path, query):
     response = qa.invoke({"query": query})
     return response["result"]
 
-
 # -----------------------------
 # Gradio Interface
 # -----------------------------
 rag_application = gr.Interface(
     fn=retriever_qa,
-    allow_flagging="never",
+    # allow_flagging="never",
     inputs=[
         gr.File(
             label="Upload PDF File",
