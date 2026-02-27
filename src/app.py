@@ -163,7 +163,7 @@ def retriever_qa(file_path, query):
 # -----------------------------
 rag_application = gr.Interface(
     fn=retriever_qa,
-    allow_flagging="never",
+    # allow_flagging="never",
     inputs=[
         gr.File(
             label="Upload PDF File",
@@ -183,7 +183,7 @@ rag_application = gr.Interface(
 )
 
 if __name__ == "__main__":
-    rag_application.launch()
+    rag_application.launch(server_name="0.0.0.0", server_port=7860)
 
 
 '''
